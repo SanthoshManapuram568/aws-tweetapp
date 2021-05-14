@@ -10,7 +10,7 @@ Open AWS Console and search IAM -> Users -> Security Credentials -> Create Keys 
 Open cmd and type -> aws configure <br/>
 Enter the credentials that are in the dowloaded file<br/>
 Open the project location till the samconfig.toml file is seen<br/>
-<h6>Ensure that maven has been installed and JAVA home is set by JDK </h6><br/>
+<b>Ensure that maven has been installed and JAVA home is set by JDK </b><br/>
 open cmd -> sam build<br/>
 Enter the API name : any_name (as user wanted)<br/>
 once build is succeed -> type sam deploy -guide<br/>
