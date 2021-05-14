@@ -1,7 +1,7 @@
 # aws-tweetapp
 Making the spring-boot-tweet-app an aws console aplication
 
-# applications required
+# Softwares required
 AWS SAM<br/>
 AWS CLI
 
