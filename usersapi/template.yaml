@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  usersapi
+
+  Sample SAM Template for usersapi
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 20
+    Runtime: java8
+    MemorySize: 512
+    Environment:
+      Variables:
+        USERS_TABLE: !Ref UsersTable
+        TWEETS_TABLE: !Ref TweetsTable
+
+Resources:
+  UsersTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: email
+        Type: String
+  TweetsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: tweetId
+        Type: String
+  CreateUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.CreateUserLambda::createUser
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: POST
+  ReadUsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.ReadUsersLambda::readUsers
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: GET
+  SearchUsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.SearchUsers::searchUsers
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /users/search/{username}
+            Method: GET
+  ForgotPasswordFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.ForgotPasswordLambda::forgotPassword
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /users/{username}/forgot
+            Method: POST
+  LoginLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.LoginLambda::login
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /users/login
+            Method: POST
+  CreateTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.CreateTweetLambda::createTweet
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/add
+            Method: POST
+  ReadUserTweetsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.ReadUserTweetsLambda::readUserTweets
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}
+            Method: GET
+  ReadTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.ReadTweetLambda::readTweetById
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/{tweetId}
+            Method: GET
+  DeleteTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.DeleteTweetLambda::deleteTweet
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/delete
+            Method: DELETE
+  LikeTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.LikeTweetLambda::likeTweet
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/like/{tweetId}
+            Method: POST
+  UpdateTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.UpdateTweetLambda::updateTweet
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/update
+            Method: PUT
+  CommentTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: usersapi
+      Handler: com.tweetapp.aws.lambda.api.CommentTweetLambda::commentTweet
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Events:
+        UserEvents:
+          Type: Api
+          Properties:
+            Path: /tweets/{username}/reply/{tweetId}
+            Method: POST
+  
+
+     
